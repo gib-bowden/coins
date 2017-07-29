@@ -1,70 +1,70 @@
+/*
+--------Functions----------
+*/
+
+//converts dollars to cents 
 function convertDollarsToCents(dollarAmount) {
 	centAmount = (dollarAmount * 100);
 	return centAmount;
 }
 
+//converts cents to dollars
 function convertCentsToDollars(centAmount) {
 	dollarAmount = (centAmount / 100);
 	return dollarAmount;
 }
 
-function getQuarterNumber (inputAmountCents) {
-var countAsCents = inputAmountCents / centValues.quarter;
-var quarterCount = Math.floor(countAsCents);
-coinPurse.quarters = quarterCount;
-remainingAmountCents = inputAmountCents - (quarterCount * centValues.quarter);
+/*
+gets the whole coin count for a given value and coin combination 
+	param coin = coin name found in the centValue and coinPurse objects
+	param inputAmount = starting amount in cents (e.g. 100 = $1.00) 
+*/
+function getCoinCount(coin, inputAmountCents) {
+var countAsCents = inputAmountCents / centValue[coin];
+var coinCount = Math.floor(countAsCents);
+coinPurse[coin] = coinCount;
+centValue.running = inputAmountCents - (coinCount * centValue[coin]);
 }
 
-function getDimeNumber (inputAmountCents) {
-var countAsCents = inputAmountCents / centValues.dime;
-var dimeCount = Math.floor(countAsCents);
-coinPurse.dimes = dimeCount;
-remainingAmountCents = inputAmountCents - (dimeCount * centValues.dime);
+//gets the count of all coin types for a given amount 
+function getTotalCoins(inputAmountCents) {
+	getCoinCount("quarter", inputAmountCents);
+	getCoinCount("dime", centValue.running);
+	getCoinCount("nickel", centValue.running);
+	getCoinCount("penny", centValue.running);
 }
 
-function getNickelNumber (inputAmountCents) {
-var countAsCents = inputAmountCents / centValues.nickel;
-var nickelCount = Math.floor(countAsCents);
-coinPurse.nickels = nickelCount;
-remainingAmountCents = inputAmountCents - (nickelCount * centValues.nickel);
+//Calculates and outputs the count of all coin types for a user provied amount
+function coinCalculator(){
+var userAmountDollars = prompt("How much money you got?")
+var userAmountCents = convertDollarsToCents(userAmountDollars);
+getTotalCoins(userAmountCents);
+alert("You have " +coinPurse.quarter+ " quarters, " +coinPurse.dime+ " dimes, " +coinPurse.nickel+ " nickels, and " +coinPurse.penny+ " pennies!!")
 }
 
+/*
+--------Variables----------
+*/
 
-function getPennyNumber (inputAmountCents) {
-var countAsCents = inputAmountCents / centValues.penny;
-var pennyCount = Math.floor(countAsCents);
-coinPurse.pennies = pennyCount;
-remainingAmountCents = inputAmountCents - (pennyCount * centValues.penny);
-}
-
-function coinCount(inputAmountCents) {
-
-	getQuarterNumber(inputAmountCents);
-	getDimeNumber(remainingAmountCents);
-	getNickelNumber(remainingAmountCents);
-	getPennyNumber(remainingAmountCents);
-	return coinPurse;
-}
-
-
-
-var centValues = {
+// object holds the value of each coin type and the running value used in the getTotalCoins function
+var centValue = {
 	quarter: 25,
 	dime: 10,
 	nickel: 5,
-	penny: 1
+	penny: 1,
+	running: 0
 }
 
+//object to hold the count for each coin type
 var coinPurse = {
-	quarters: 0,
-    dimes: 0,
-    nickels: 0,
-    pennies: 0	
+	quarter: 0,
+    dime: 0,
+    nickel: 0,
+    penny: 0	
 }
 
-var runningAmountCents;
-var inputAmountDollars = 1.61;
-var amount = convertDollarsToCents(inputAmountDollars);
+/*
+--------Workspace----------
+*/
 
-
-console.log(coinCount(amount));
+coinCalculator();
