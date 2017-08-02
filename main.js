@@ -8,30 +8,19 @@ function convertDollarsToCents(dollarAmount) {
 	return centAmount;
 }
 
-//converts cents to dollars
-function convertCentsToDollars(centAmount) {
-	dollarAmount = (centAmount / 100);
-	return dollarAmount;
-}
-
-/*
-gets the whole coin count for a given value and coin combination 
-	param coin = coin name found in the centValue and coinPurse objects
-	param inputAmount = starting amount in cents (e.g. 100 = $1.00) 
-*/
 function getCoinCount(coin, inputAmountCents) {
 var countAsCents = inputAmountCents / centValue[coin];
 var coinCount = Math.floor(countAsCents);
 coinPurse[coin] = coinCount;
-centValue.running = inputAmountCents - (coinCount * centValue[coin]);
+return inputAmountCents -= (coinCount * centValue[coin]);
 }
 
 //gets the count of all coin types for a given amount 
 function getTotalCoins(inputAmountCents) {
-	getCoinCount("quarter", inputAmountCents);
-	getCoinCount("dime", centValue.running);
-	getCoinCount("nickel", centValue.running);
-	getCoinCount("penny", centValue.running);
+	var amount = inputAmountCents;	
+		for (var i = 0; i < coinPurseKeys.length; i++) {
+		amount = getCoinCount(coinPurseKeys[i], amount);
+	}
 }
 
 //Calculates and outputs the count of all coin types for a user provied amount
@@ -52,7 +41,6 @@ var centValue = {
 	dime: 10,
 	nickel: 5,
 	penny: 1,
-	running: 0
 }
 
 //object to hold the count for each coin type
@@ -63,8 +51,15 @@ var coinPurse = {
     penny: 0	
 }
 
+// turns the keys of the coinPurse object into an array
+var coinPurseKeys = Object.keys(coinPurse);
+
+// turns the keys of the coinValue object into an array
+var coinValueKeys = Object.keys(centValue);
+
 /*
 --------Workspace----------
 */
 
 coinCalculator();
+console.log(coinPurseKeys);
